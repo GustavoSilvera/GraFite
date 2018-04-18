@@ -27,11 +27,11 @@ public class Sprite {
     }
     
     public void move() {
-    	final double eff = 0.95;//efficiency loss of speed
+    	final double eff = 1;//efficiency loss of speed
     	vel = (vel.times(eff)).plus(acc);//increases velocity by speed (with efficiency loss)
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     	if(x >= screenSize.getWidth() - w || x <= 0) vel.setX(-eff*vel.getX());
-    	x += vel.getX();
+    	x += vel.getX();	
     	if(y >= screenSize.getHeight() - h || y <= 0) vel.setY(-eff*vel.getY());
     	y += vel.getY();
     }
