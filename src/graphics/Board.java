@@ -1,6 +1,7 @@
 package graphics;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
@@ -24,7 +25,7 @@ public class Board extends JPanel implements ActionListener {
         setDoubleBuffered(true);
         Freddy = new Sprite();
         timer = new Timer(msDELAY, this);
-        timer.start();    
+        timer.start();
     }
     @Override
     public void paintComponent(Graphics g) {
@@ -37,9 +38,11 @@ public class Board extends JPanel implements ActionListener {
         g2d.drawImage(Freddy.getImage(), (int)Freddy.getX(), (int)Freddy.getY(), this);
     }
     @Override
-    public void actionPerformed(ActionEvent e) {    
+    public void actionPerformed(ActionEvent e) {    //update()
     	Freddy.move();
-        repaint((int)Freddy.getX()-1, (int)Freddy.getY()-1, Freddy.getWidth()+2, Freddy.getHeight()+2);     
+    	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    	repaint((int)Freddy.getX()-1, (int)Freddy.getY()-1, Freddy.getWidth()+2, Freddy.getHeight()+2);     
+    	//repaint(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight());     
     }
     private class TAdapter extends KeyAdapter {
         @Override
