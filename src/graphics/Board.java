@@ -35,14 +35,15 @@ public class Board extends JPanel implements ActionListener {
     }
     private void doDrawing(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
+        g2d.rotate(Freddy.getAngle(), Freddy.getX() + Freddy.getWidth()/2, Freddy.getY() + Freddy.getHeight()/2);
         g2d.drawImage(Freddy.getImage(), (int)Freddy.getX(), (int)Freddy.getY(), this);
     }
     @Override
     public void actionPerformed(ActionEvent e) {    //update()
     	Freddy.move();
     	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    	repaint((int)Freddy.getX()-1, (int)Freddy.getY()-1, Freddy.getWidth()+2, Freddy.getHeight()+2);     
-    	//repaint(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight());     
+    	//repaint((int)Freddy.getX()-1, (int)Freddy.getY()-1, Freddy.getWidth()+2, Freddy.getHeight()+2);     
+    	repaint(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight());     
     }
     private class TAdapter extends KeyAdapter {
         @Override
