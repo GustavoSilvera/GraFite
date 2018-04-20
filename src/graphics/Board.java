@@ -22,14 +22,14 @@ public class Board extends JPanel implements ActionListener {
     ArrayList<Sprite> enemies = new ArrayList<Sprite>();
     public Dimension screenSize;
     private final int msDELAY = 10;
-    private final int NUM_ENEMIES = 300;
+    private final int NUM_ENEMIES = 30;
     public Board() {
     	addKeyListener(new TAdapter());
     	screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setFocusable(true);
         setBackground(Color.black);
         setDoubleBuffered(true);
-        Freddy = new Sprite();
+        Freddy = new Sprite((int)screenSize.getWidth()/2, (int)screenSize.getHeight()/2, 1);
         for(int i = 0; i < NUM_ENEMIES; i++) {
         	int randomX = ThreadLocalRandom.current().nextInt(0, (int)screenSize.getWidth());
         	int randomY = ThreadLocalRandom.current().nextInt(0, (int)screenSize.getHeight());
@@ -47,25 +47,23 @@ public class Board extends JPanel implements ActionListener {
     }
     private void doDrawing(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-        
         for(int i = 0; i < enemies.size(); i++) {
-            g2d.translate(enemies.get(i).getScale(), enemies.get(i).getScale());
-        	g2d.scale(enemies.get(i).getScale(), enemies.get(i).getScale());
-            g2d.rotate(enemies.get(i).getAngle(), enemies.get(i).getX() + enemies.get(i).getWidth()/2, enemies.get(i).getY() + enemies.get(i).getHeight()/2);
-            g2d.drawImage(enemies.get(i).getImage(), (int)enemies.get(i).getX(), (int)enemies.get(i).getY(), this);
+            g2d.rotate(enemies.get(i).getAngle(), enemies.get(i).getXcntr(), enemies.get(i).getYcntr());
+            g2d.drawImage(enemies.get(i).getImage(), enemies.get(i).getX(), (int)enemies.get(i).getY(), (int)(enemies.get(i).getScale() * enemies.get(i).getWidth()), (int)(enemies.get(i).getScale() * enemies.get(i).getHeight()), this);
         }
-        
-        g2d.translate(Freddy.getScale(), Freddy.getScale());
-        g2d.scale(Freddy.getScale(), Freddy.getScale());
-        g2d.rotate(Freddy.getAngle(), Freddy.getX() + Freddy.getWidth()/2, Freddy.getY() + Freddy.getHeight()/2);
-        g2d.drawImage(Freddy.getImage(), (int)Freddy.getX(), (int)Freddy.getY(), this);
+        g2d.rotate(Freddy.getAngle(), Freddy.getXcntr(), Freddy.getYcntr());
+        g2d.drawImage(Freddy.getImage(), Freddy.getX(), Freddy.getY(), (int)(Freddy.getScale() * Freddy.getWidth()), (int)(Freddy.getScale() * Freddy.getHeight()), this);
         g2d.dispose();
     }
     @Override
     public void actionPerformed(ActionEvent e) {    //update()
-    	Freddy.move();
+    	Freddy.update();
     	for(int i = 0; i < enemies.size(); i++) {
-            enemies.get(i).move();
+    		enemies.get(i).target(Freddy, 0.5);
+            enemies.get(i).update();
+            for(int j = 0; j < enemies.size(); j++) {
+            	if(i != j) enemies.get(i).collideWith(enemies.get(j));//physics with other entities
+            }
         }
     	//repaint((int)Freddy.getX()-1, (int)Freddy.getY()-1, Freddy.getWidth()+2, Freddy.getHeight()+2);     
     	repaint(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight());     
@@ -73,17 +71,10 @@ public class Board extends JPanel implements ActionListener {
     private class TAdapter extends KeyAdapter {
         @Override
         public void keyReleased(KeyEvent e) { 
-	        	for(int i = 0; i < enemies.size(); i++) {
-	                enemies.get(i).keyReleased(e);
-	            }
-	        	Freddy.keyReleased(e); 
-        	}
-        
+	        Freddy.keyReleased(e); 
+        }
         @Override
         public void keyPressed(KeyEvent e) { 
-        	for(int i = 0; i < enemies.size(); i++) {
-                enemies.get(i).keyPressed(e);
-            }
         	Freddy.keyPressed(e); 
         }
     }
