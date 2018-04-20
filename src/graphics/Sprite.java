@@ -81,6 +81,8 @@ public class Sprite {
     public Image getImage() { return image; }
     public int getXcntr() {	return (int) (pos.getX() + scale * w / 2.0); }
     public int getYcntr() {	return (int) (pos.getY() + scale * h / 2.0); }
+    //setters
+    public void setAngle(float a) { angle = toRad(a); } 
     //key listeners
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();

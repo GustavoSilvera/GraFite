@@ -33,6 +33,11 @@ public class Board extends JPanel implements ActionListener {
         for(int i = 0; i < NUM_ENEMIES; i++) {
         	int randomX = ThreadLocalRandom.current().nextInt(0, (int)screenSize.getWidth());
         	int randomY = ThreadLocalRandom.current().nextInt(0, (int)screenSize.getHeight());
+        	int randStartingWall = ThreadLocalRandom.current().nextInt(0, 4);
+        	if(randStartingWall == 0) randomX = 0;
+        	else if(randStartingWall == 1) randomX = (int)screenSize.getWidth();
+        	else if(randStartingWall == 2) randomY = 0;
+        	else randomY = (int)screenSize.getHeight();
         	Sprite e = new Sprite(randomX, randomY, 0.5);
         	enemies.add(e);
         }
@@ -63,6 +68,19 @@ public class Board extends JPanel implements ActionListener {
             enemies.get(i).update();
             for(int j = 0; j < enemies.size(); j++) {
             	if(i != j) enemies.get(i).collideWith(enemies.get(j));//physics with other entities
+            	double dist = enemies.get(i).getWidth()/2*enemies.get(i).getScale() + Freddy.getWidth()*Freddy.getScale()/2;
+            	if(enemies.get(i).getPos().distanceSqr(Freddy.getPos()) < Math.pow(dist, 2)) {
+            		enemies.remove(i);
+            		int randomX = ThreadLocalRandom.current().nextInt(0, (int)screenSize.getWidth());
+                	int randomY = ThreadLocalRandom.current().nextInt(0, (int)screenSize.getHeight());
+                	int randStartingWall = ThreadLocalRandom.current().nextInt(0, 4);
+                	if(randStartingWall == 0) randomX = 0;
+                	else if(randStartingWall == 1) randomX = (int)screenSize.getWidth();
+                	else if(randStartingWall == 2) randomY = 0;
+                	else randomY = (int)screenSize.getHeight();
+                	Sprite s = new Sprite(randomX, randomY, 0.5);
+            		enemies.add(s);
+            	}
             }
         }
     	//repaint((int)Freddy.getX()-1, (int)Freddy.getY()-1, Freddy.getWidth()+2, Freddy.getHeight()+2);     
