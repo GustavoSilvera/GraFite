@@ -27,7 +27,8 @@ public class Sprite {
     private Image image;
     private int kills = 0;
     public weapon gun = new weapon();
-    
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
     public Sprite() {
     	ImageIcon asset = new ImageIcon(getClass().getClassLoader().getResource( "img/freddy.png" ));//"C:/Users/grs53/eclipse-workspace/graphics/src/graphics/freddy.png");
         image = asset.getImage(); 
@@ -44,13 +45,12 @@ public class Sprite {
         scale = scalar;
         speed = s;
     }
-    public void update() {
+    public void update(int winX, int winY) {
     	final double eff = 0.95;//efficiency loss of speed
     	vel = (vel.times(eff)).plus(acc);//increases velocity by speed (with efficiency loss)
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    	if(pos.getX()*scale >= screenSize.getWidth() - (w*scale) ) 	vel.setX(-Math.abs(vel.getX()));	
+    	if(pos.getX() >= winX - w*scale ) 					vel.setX(-Math.abs(vel.getX()));	
     	else if (pos.getX() <= 0) 									vel.setX(Math.abs(vel.getX()));										
-    	if(pos.getY()*scale >= screenSize.getHeight() - (h*scale) ) vel.setY(-Math.abs(vel.getY()));	
+    	if(pos.getY() >= winY - h*scale ) 					vel.setY(-Math.abs(vel.getY()));	
     	else if (pos.getY() <= 0) 									vel.setY(Math.abs(vel.getY()));	
     	pos = pos.plus(vel);
     	angVel = angVel*eff*0.9 + angAcc;//updates velocity
@@ -67,7 +67,7 @@ public class Sprite {
     	else if(pos.getX() > goalX) acc.setX(-speed);
     	if(pos.getY() < goalY) acc.setY(speed);
     	else if(pos.getY() > goalY) acc.setY(-speed);
-    	//angVel = 0.01;
+    	angVel = 0.1;
     }
     public void collideWith(Sprite collision) {
     	final double dist = Math.pow(getXcntr() - collision.getXcntr(), 2) + Math.pow(getYcntr() - collision.getYcntr(), 2);
@@ -78,17 +78,17 @@ public class Sprite {
     		vel = vel.plus(normal.times((radiusSum - dist) / dist).times(bounce));
     	}
     }
-    public static Sprite randomStart() {
+    public static Sprite randomStart(int winX, int winY) {
     	final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    	int randomX = ThreadLocalRandom.current().nextInt(0, (int)screenSize.getWidth());
-    	int randomY = ThreadLocalRandom.current().nextInt(0, (int)screenSize.getHeight());
+    	int randomX = ThreadLocalRandom.current().nextInt(0, winX);
+    	int randomY = ThreadLocalRandom.current().nextInt(0, winY);
     	int random = ThreadLocalRandom.current().nextInt(10, 30);
     	
     	int randStartingWall = ThreadLocalRandom.current().nextInt(0, 4);
-    	if(randStartingWall == 0) randomX = 1;
-    	else if(randStartingWall == 1) randomX = (int)screenSize.getWidth();
-    	else if(randStartingWall == 2) randomY = 1;
-    	else randomY = (int)screenSize.getHeight();
+    	if(randStartingWall == 0) randomX = 0;
+    	else if(randStartingWall == 1) randomX = winX;
+    	else if(randStartingWall == 2) randomY = 0;
+    	else randomY = winY;
     	Sprite rando = new Sprite(randomX, randomY, random/100.0, random/100.0);
     	return rando;
     }
