@@ -26,7 +26,7 @@ public class Board extends JPanel implements ActionListener {
     ArrayList<Sprite> enemies = new ArrayList<Sprite>();
     public Dimension screenSize;
     private final int msDELAY = 10;
-    private final int NUM_ENEMIES = 40;
+    private final int NUM_ENEMIES = 10;
     public Board() {
     	addKeyListener(new TAdapter());
     	addMouseListener(new MAdapter());
@@ -56,8 +56,10 @@ public class Board extends JPanel implements ActionListener {
         }
         g2d.setColor(new Color(255, 0, 0));
         g2d.setStroke(new BasicStroke(10f));
-        if(Freddy.gun.isFiring) 
-        	g2d.draw(new Line2D.Double(Freddy.getXcntr(), Freddy.getYcntr(), Freddy.getXcntr() + 1000*Math.cos(Freddy.getAngle()), Freddy.getYcntr() + 1000*Math.sin(Freddy.getAngle())));
+        if(Freddy.gun.isFiring) {
+        	if(Freddy.gun.length < 2000) Freddy.gun.length += 150;
+        	g2d.draw(new Line2D.Double(Freddy.getXcntr() + Freddy.getScale()*Freddy.gun.length*Math.cos(Freddy.getAngle()), Freddy.getYcntr() + Freddy.getScale()*Freddy.gun.length*Math.sin(Freddy.getAngle()), Freddy.getXcntr() + Freddy.gun.length*Math.cos(Freddy.getAngle()), Freddy.getYcntr() + Freddy.gun.length*Math.sin(Freddy.getAngle())));
+        }
         g2d.rotate(Freddy.getAngle(), Freddy.getXcntr(), Freddy.getYcntr());
         g2d.drawImage(Freddy.getImage(), Freddy.getX(), Freddy.getY(), (int)(Freddy.getScale() * Freddy.getWidth()), (int)(Freddy.getScale() * Freddy.getHeight()), this);
         g2d.setColor(new Color(255, 255, 255));
@@ -65,6 +67,7 @@ public class Board extends JPanel implements ActionListener {
         g2d.setFont(new Font("Purisa", Font.PLAIN, 40));
         g2d.drawString("EnemiesKilled: " + Freddy.getKills(), 50, 50);
         g2d.dispose();
+        
     }
     @Override
     public void actionPerformed(ActionEvent e) {    //update()

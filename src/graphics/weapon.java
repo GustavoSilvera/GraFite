@@ -11,13 +11,14 @@ public class weapon {
 	private double angle;
 	public boolean isFiring;
     private Image image;
-
+    public int length;
 	public weapon() {
 		ImageIcon asset = new ImageIcon(getClass().getClassLoader().getResource( "img/pow.png" ));
 		image = asset.getImage(); 
 		ammo = 100;
 		killCount = 0;
 		angle = 0;
+		length = 100;
 		isFiring = false;
 	}
 	
@@ -27,6 +28,7 @@ public class weapon {
 	}
 	public void ceaseFire() {
 		isFiring = false;
+		length = 100;
 	}
 
 	public Image getImage() {return image;	}

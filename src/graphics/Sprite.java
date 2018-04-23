@@ -67,8 +67,8 @@ public class Sprite {
     public void getShot(Sprite shooter) {
     	if(
     		shooter.gun.isFiring && 
-			Math.abs(getXcntr() - (shooter.getXcntr() + 1000*Math.cos(shooter.getAngle()))) < 100 && 
-			Math.abs(getYcntr() - (shooter.getYcntr() + 1000*Math.sin(shooter.getAngle()))) < 100 ) 
+			Math.abs(getXcntr() - (shooter.getXcntr() + shooter.gun.length*Math.cos(shooter.getAngle()))) < w*scale && 
+			Math.abs(getYcntr() - (shooter.getYcntr() + shooter.gun.length*Math.sin(shooter.getAngle()))) < h*scale ) 
     			die();
     }
     public void target(Sprite goal) {//moves towards goal
