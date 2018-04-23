@@ -6,6 +6,7 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.swing.ImageIcon;
@@ -24,6 +25,8 @@ public class Sprite {
     private double angle  = 0;
     private int w;
     private int h;
+    public double mX;
+    public double mY;
     private Image image;
     private int kills = 0;
     public weapon gun = new weapon();
@@ -79,7 +82,6 @@ public class Sprite {
     	}
     }
     public static Sprite randomStart(int winX, int winY) {
-    	final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     	int randomX = ThreadLocalRandom.current().nextInt(0, winX);
     	int randomY = ThreadLocalRandom.current().nextInt(0, winY);
     	int random = ThreadLocalRandom.current().nextInt(10, 30);
@@ -123,7 +125,7 @@ public class Sprite {
         if (key == KeyEvent.VK_O) 		scaleAcc =  0.01f;
         if (key == KeyEvent.VK_P) 		scaleAcc = -0.01f;
         //shooting
-        if (key == KeyEvent.VK_SPACE)gun.shoot(this, this);
+        if (key == KeyEvent.VK_SPACE) gun.shoot(this, this);
         
     }
     public void keyReleased(KeyEvent e) {
@@ -139,7 +141,17 @@ public class Sprite {
         //scale
         if (key == KeyEvent.VK_O) 		scaleAcc =  0;
         if (key == KeyEvent.VK_P) 		scaleAcc =  0;
+        //shooting
+        if (key == KeyEvent.VK_SPACE) gun.ceaseFire();
     }
+    //mouse listeners
+    public void mouseMove(MouseEvent e) {
+    	mX = e.getX() - pos.getX();
+    	mY = e.getY() - pos.getY();
+    	//angular movement;
+    	angle = Math.atan(mY/mX);
+    }
+    
     private double toRad(double degrees) {
     	return (degrees * Math.PI / 180.0);
     }

@@ -23,18 +23,21 @@ public class weapon {
 	public void shoot(Sprite gunner, Sprite target) {
 		isFiring = true;
 		ammo--;
-		if(gunner.getX() < target.getX() && gunner.getAngle() == 0) {
+		if(gunner.getX() < target.getX()) {
 			
 		}
-		else if(gunner.getX() > target.getX() && gunner.getAngle() == 180) {
+		else if(gunner.getX() > target.getX()) {
 			
 		}
-		else if(gunner.getY() < target.getY() && gunner.getAngle() == 90) {
+		else if(gunner.getY() < target.getY()) {
 			
 		}
-		else if(gunner.getY() > target.getY() && gunner.getAngle() == 270) {
+		else if(gunner.getY() > target.getY()) {
 		
 		}
+	}
+	public void ceaseFire() {
+		isFiring = false;
 	}
 
 	public Image getImage() {return image;	}

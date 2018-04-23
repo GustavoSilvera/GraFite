@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -23,9 +25,10 @@ public class Board extends JPanel implements ActionListener {
     ArrayList<Sprite> enemies = new ArrayList<Sprite>();
     public Dimension screenSize;
     private final int msDELAY = 10;
-    private final int NUM_ENEMIES = 300;
+    private final int NUM_ENEMIES = 500;
     public Board() {
     	addKeyListener(new TAdapter());
+    	addMouseListener(new MAdapter());
     	screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setFocusable(true);
         setBackground(Color.black);
@@ -55,8 +58,8 @@ public class Board extends JPanel implements ActionListener {
         if(Freddy.gun.isFiring) g2d.drawImage(Freddy.gun.getImage(), Freddy.getX() + Freddy.getWidth(), Freddy.getY() + Freddy.getHeight(), (int)(Freddy.getScale() * Freddy.getWidth()), (int)(Freddy.getScale() * Freddy.getHeight()), this);
         g2d.drawImage(Freddy.getImage(), Freddy.getX(), Freddy.getY(), (int)(Freddy.getScale() * Freddy.getWidth()), (int)(Freddy.getScale() * Freddy.getHeight()), this);
         g2d.setColor(new Color(255, 255, 255));
-        g2d.setFont(new Font("Purisa", Font.PLAIN, 40));
         g2d.rotate(-Freddy.getAngle(), Freddy.getXcntr(), Freddy.getYcntr());
+        g2d.setFont(new Font("Purisa", Font.PLAIN, 40));
         g2d.drawString("EnemiesKilled: " + Freddy.getKills(), 50, 50);
 
         g2d.dispose();
@@ -88,6 +91,12 @@ public class Board extends JPanel implements ActionListener {
         @Override
         public void keyPressed(KeyEvent e) { 
         	Freddy.keyPressed(e); 
+        }
+    }
+    private class MAdapter extends MouseAdapter {
+    	@Override
+        public void mouseMoved(MouseEvent e) {
+        	Freddy.mouseMove(e);
         }
     }
 }
