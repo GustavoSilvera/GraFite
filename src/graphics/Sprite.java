@@ -25,6 +25,7 @@ public class Sprite {
     private double angle  = 0;
     private int w;
     private int h;
+    private boolean lifeStatus = true;
     public double mX;
     public double mY;
     private Image image;
@@ -63,6 +64,13 @@ public class Sprite {
     	else scale += Math.abs(scaleVel);
     	//scale += 0.00001*kills;
     }
+    public void getShot(Sprite shooter) {
+    	if(
+    		shooter.gun.isFiring && 
+			Math.abs(getXcntr() - (shooter.getXcntr() + 1000*Math.cos(shooter.getAngle()))) < 100 && 
+			Math.abs(getYcntr() - (shooter.getYcntr() + 1000*Math.sin(shooter.getAngle()))) < 100 ) 
+    			die();
+    }
     public void target(Sprite goal) {//moves towards goal
     	double goalX = goal.getX() + goal.getWidth()/2.0*goal.getScale() * scale;//gets middle of image X
     	double goalY = goal.getY() + goal.getWidth()/2.0*goal.getScale() * scale;//gets middle of image Y
@@ -81,6 +89,9 @@ public class Sprite {
     		vel = vel.plus(normal.times((radiusSum - dist) / dist).times(bounce));
     	}
     }
+    public void die() {
+    	lifeStatus = false;
+    }
     public static Sprite randomStart(int winX, int winY) {
     	int randomX = ThreadLocalRandom.current().nextInt(0, winX);
     	int randomY = ThreadLocalRandom.current().nextInt(0, winY);
@@ -97,7 +108,7 @@ public class Sprite {
     //getters
     public int getX() { return (int)pos.getX(); }
     public int getY() { return (int)pos.getY(); }
-    public int getKills() {return kills;}
+    public int getKills() { return kills; }
     public vec3 getPos() {	return pos; }
     public int getWidth() { return w; }
     public int getHeight() { return h; }    
@@ -107,6 +118,7 @@ public class Sprite {
     public int getXcntr() {	return (int) (pos.getX() + scale * w / 2.0); }
     public int getYcntr() {	return (int) (pos.getY() + scale * h / 2.0); }
     public vec3 getCenterPos() { return new vec3((pos.getX() + scale * w / 2.0), pos.getY() + scale * h / 2.0, 0); }
+    public boolean isAlive() { return lifeStatus; }
     //setters
     public void setAngle(float a) { angle = toRad(a); } 
     public void addKill() { kills ++;} 

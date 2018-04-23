@@ -1,6 +1,7 @@
 package graphics;
 
 import java.awt.Image;
+import java.awt.geom.Line2D;
 
 import javax.swing.ImageIcon;
 
@@ -23,18 +24,6 @@ public class weapon {
 	public void shoot(Sprite gunner, Sprite target) {
 		isFiring = true;
 		ammo--;
-		if(gunner.getX() < target.getX()) {
-			
-		}
-		else if(gunner.getX() > target.getX()) {
-			
-		}
-		else if(gunner.getY() < target.getY()) {
-			
-		}
-		else if(gunner.getY() > target.getY()) {
-		
-		}
 	}
 	public void ceaseFire() {
 		isFiring = false;
