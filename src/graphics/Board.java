@@ -16,27 +16,29 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class Board extends JPanel implements ActionListener {
     private Timer timer;
-    private Sprite Freddy;
-    ArrayList<Sprite> enemies = new ArrayList<Sprite>();
+    private player Freddy;
+    ArrayList<enemy> enemies = new ArrayList<enemy>();
     public Dimension screenSize;
     private final int msDELAY = 10;
-    private final int NUM_ENEMIES = 10;
+    private final int NUM_INIT_ENEMIES = 5;
     public Board() {
     	addKeyListener(new TAdapter());
-    	addMouseListener(new MAdapter());
+    	addMouseMotionListener(new MAdapter());
     	screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setFocusable(true);
         setBackground(Color.black);
         setDoubleBuffered(true);
-        Freddy = new Sprite((int)screenSize.getWidth()/2, (int)screenSize.getHeight()/2, 0.5, 1);
-        for(int i = 0; i < NUM_ENEMIES; i++) {
-        	enemies.add(Sprite.randomStart((int)screenSize.getWidth(), (int)screenSize.getHeight()));
+        Freddy = new player((int)screenSize.getWidth()/2, (int)screenSize.getHeight()/2, 0.5);
+        for(int i = 0; i < NUM_INIT_ENEMIES; i++) {
+        	enemies.add(enemy.randomStart((int)screenSize.getWidth(), (int)screenSize.getHeight()));
         }
         timer = new Timer(msDELAY, this);
         timer.start();
@@ -50,6 +52,7 @@ public class Board extends JPanel implements ActionListener {
     private void doDrawing(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         for(int i = 0; i < enemies.size(); i++) {
+            g2d.setColor(new Color(255, 0, 0, (int) enemies.get(i).alpha));
             g2d.rotate(enemies.get(i).getAngle(), enemies.get(i).getXcntr(), enemies.get(i).getYcntr());
             g2d.drawImage(enemies.get(i).getImage(), enemies.get(i).getX(), (int)enemies.get(i).getY(), (int)(enemies.get(i).getScale() * enemies.get(i).getWidth()), (int)(enemies.get(i).getScale() * enemies.get(i).getHeight()), this);
             g2d.rotate(-(enemies.get(i).getAngle()), enemies.get(i).getXcntr(), enemies.get(i).getYcntr());
@@ -65,7 +68,8 @@ public class Board extends JPanel implements ActionListener {
         g2d.setColor(new Color(255, 255, 255));
         g2d.rotate(-Freddy.getAngle(), Freddy.getXcntr(), Freddy.getYcntr());
         g2d.setFont(new Font("Purisa", Font.PLAIN, 40));
-        g2d.drawString("EnemiesKilled: " + Freddy.getKills(), 50, 50);
+        g2d.drawString("Enemies Killed: " + Freddy.getKills(), 50, 50);
+        g2d.drawString("Enemies Remaining: " + enemies.size(), 50, 150);
         g2d.dispose();
         
     }
@@ -85,10 +89,19 @@ public class Board extends JPanel implements ActionListener {
             		enemies.add(Sprite.randomStart(getWidth(), getHeight()));
             	}*/
             }
-            if(!enemies.get(i).isAlive()) {
-        		enemies.remove(i);
+            if(enemies.get(i).getHealth() <= 0) {//when enemies die
+        		enemies.remove(i);//removes one
         		Freddy.addKill();
-        		enemies.add(Sprite.randomStart(getWidth(), getHeight()));
+        		
+        		if(Freddy.getKills() % 2 == 0) {
+        			enemies.add(enemy.randomStart(getWidth(), getHeight()));//adds TWO
+        			enemies.add(enemy.randomStart(getWidth(), getHeight()));
+        		}
+        		if(Freddy.getKills() % 20 == 0) {
+            		for(int j = 0; j < 5; j++) {
+            			enemies.add(enemy.randomStart(getWidth(), getHeight()));
+            		}
+            	}
         	}
         }
     	//repaint((int)Freddy.getX()-1, (int)Freddy.getY()-1, Freddy.getWidth()+2, Freddy.getHeight()+2);     
