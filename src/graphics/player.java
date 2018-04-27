@@ -7,6 +7,7 @@ import javax.swing.ImageIcon;
 
 public class player extends Sprite{
 	public weapon gun = new weapon();
+	private int health = 10;
 	private int kills = 0;
 
 	public player(int startX, int startY, double scalar) {
@@ -20,11 +21,19 @@ public class player extends Sprite{
 	        animation = new Thread();
 	        animation.start();
 	   }
+	public void getHurt() {
+		if(health > 0) health--;
+	}
+	public void update(int winX, int winY) {
+		super.update(winX,  winY);
+		if(health < 1) {
+			scale-=0.02; 
+			angle++;
+		}
+	}
 	//getters
     public int getKills() { return kills; }
-
-    
-    
+    public int getHealth() {return health;}
 	public void addKill() { kills ++;} 
     //key listeners
     public void keyPressed(KeyEvent e) {
@@ -41,7 +50,11 @@ public class player extends Sprite{
         if (key == KeyEvent.VK_O) 		scaleAcc =  0.01f;
         if (key == KeyEvent.VK_P) 		scaleAcc = -0.01f;
         //shooting
-        if (key == KeyEvent.VK_SPACE) gun.shoot(this, this);
+        if (key == KeyEvent.VK_SPACE) {
+        	gun.angle = getAngle();
+        	gun.shoot(this, this);
+        	gun.bullets.add(new Integer(0));
+        }
         
     }
     public void keyReleased(KeyEvent e) {

@@ -58,10 +58,18 @@ public class Board extends JPanel implements ActionListener {
             g2d.rotate(-(enemies.get(i).getAngle()), enemies.get(i).getXcntr(), enemies.get(i).getYcntr());
         }
         g2d.setColor(new Color(255, 0, 0));
-        g2d.setStroke(new BasicStroke(10f));
-        if(Freddy.gun.isFiring) {
-        	if(Freddy.gun.length < 2000) Freddy.gun.length += 150;
-        	g2d.draw(new Line2D.Double(Freddy.getXcntr() + Freddy.getScale()*Freddy.gun.length*Math.cos(Freddy.getAngle()), Freddy.getYcntr() + Freddy.getScale()*Freddy.gun.length*Math.sin(Freddy.getAngle()), Freddy.getXcntr() + Freddy.gun.length*Math.cos(Freddy.getAngle()), Freddy.getYcntr() + Freddy.gun.length*Math.sin(Freddy.getAngle())));
+        g2d.setStroke(new BasicStroke(10f));//thicc line 
+        for(int i = 0; i < Freddy.gun.bullets.size(); i++) {
+        	if(Freddy.gun.bullets.get(i) < 4000) {
+        		Freddy.gun.bullets.set(i, Freddy.gun.bullets.get(i) + 150);
+        		g2d.draw(new Line2D.Double(
+        				Freddy.getXcntr() + 15*Freddy.gun.bullets.get(i)*Math.cos(Freddy.gun.getAngle()), 
+        				Freddy.getYcntr() + 15*Freddy.gun.bullets.get(i)*Math.sin(Freddy.gun.getAngle()), 
+        				Freddy.getXcntr() + Freddy.gun.bullets.get(i)*Math.cos(Freddy.gun.getAngle()), 
+        				Freddy.getYcntr() + Freddy.gun.bullets.get(i)*Math.sin(Freddy.gun.getAngle()))
+        			);
+       		}
+        	else Freddy.gun.bullets.remove(i);//kills bullet
         }
         g2d.rotate(Freddy.getAngle(), Freddy.getXcntr(), Freddy.getYcntr());
         g2d.drawImage(Freddy.getImage(), Freddy.getX(), Freddy.getY(), (int)(Freddy.getScale() * Freddy.getWidth()), (int)(Freddy.getScale() * Freddy.getHeight()), this);
@@ -70,6 +78,7 @@ public class Board extends JPanel implements ActionListener {
         g2d.setFont(new Font("Purisa", Font.PLAIN, 40));
         g2d.drawString("Enemies Killed: " + Freddy.getKills(), 50, 50);
         g2d.drawString("Enemies Remaining: " + enemies.size(), 50, 150);
+        g2d.drawString("Current Health: " + Freddy.getHealth(), 50, 250);
         g2d.dispose();
         
     }
@@ -82,13 +91,13 @@ public class Board extends JPanel implements ActionListener {
             enemies.get(i).getShot(Freddy);
             for(int j = 0; j < enemies.size(); j++) {
             	if(i != j) enemies.get(i).collideWith(enemies.get(j));//physics with other entities
-            	//double dist = enemies.get(i).getWidth()/2*enemies.get(i).getScale() + Freddy.getWidth()*Freddy.getScale()/2;
-            	/*if(enemies.get(i).getCenterPos().distanceSqr(Freddy.getCenterPos()) < Math.pow(dist, 2)) {
-            		enemies.remove(i);
-            		Freddy.addKill();
-            		enemies.add(Sprite.randomStart(getWidth(), getHeight()));
-            	}*/
             }
+            double dist = enemies.get(i).getWidth()/2*enemies.get(i).getScale() + Freddy.getWidth()*Freddy.getScale()/2;
+            if(enemies.get(i).getCenterPos().distanceSqr(Freddy.getCenterPos()) < Math.pow(dist, 2)) {
+        		Freddy.getHurt();
+        		enemies.remove(i);
+    			enemies.add(enemy.randomStart(getWidth(), getHeight()));
+        	}
             if(enemies.get(i).getHealth() <= 0) {//when enemies die
         		enemies.remove(i);//removes one
         		Freddy.addKill();
@@ -104,6 +113,7 @@ public class Board extends JPanel implements ActionListener {
             	}
         	}
         }
+    	if(Freddy.getScale() < 0.01) timer.stop(); 
     	//repaint((int)Freddy.getX()-1, (int)Freddy.getY()-1, Freddy.getWidth()+2, Freddy.getHeight()+2);     
     	repaint(0, 0, getWidth(), getHeight());     
     }

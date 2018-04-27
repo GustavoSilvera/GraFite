@@ -23,7 +23,6 @@ public class enemy extends Sprite{
     	int randomX = ThreadLocalRandom.current().nextInt(0, winX);
     	int randomY = ThreadLocalRandom.current().nextInt(0, winY);
     	int random = ThreadLocalRandom.current().nextInt(10, 30);
-    	
     	int randStartingWall = ThreadLocalRandom.current().nextInt(0, 4);
     	if(randStartingWall == 0) randomX = 0;
     	else if(randStartingWall == 1) randomX = winX;
@@ -43,10 +42,12 @@ public class enemy extends Sprite{
     	angle = Math.atan2(getYcntr() - goal.getYcntr(), getXcntr() - goal.getXcntr());//(mY / mX);
     }
 	public void getShot(player shooter) {
-    	if(
-    		shooter.gun.isFiring && 
-			Math.abs(getXcntr() - (shooter.getXcntr() + shooter.gun.length*Math.cos(shooter.getAngle()))) < width*scale && 
-			Math.abs(getYcntr() - (shooter.getYcntr() + shooter.gun.length*Math.sin(shooter.getAngle()))) < height*scale ) 
-    			die();
-    }
+		//for loop for all bullets
+		for(int i = 0; i < shooter.gun.bullets.size(); i++) {
+			if(
+    		 Math.abs(getXcntr() - (shooter.getXcntr() + shooter.gun.bullets.get(i)*Math.cos(shooter.getAngle()))) < width*scale && 
+    		 Math.abs(getYcntr() - (shooter.getYcntr() + shooter.gun.bullets.get(i)*Math.sin(shooter.getAngle()))) < height*scale ) 
+    		die();
+		}
+	}
 }
