@@ -7,7 +7,7 @@ import javax.swing.ImageIcon;
 
 public class player extends Sprite{
 	public weapon gun = new weapon();
-	private int health = 10;
+	private int health = 15;
 	private int kills = 0;
 
 	public player(int startX, int startY, double scalar) {
@@ -51,9 +51,7 @@ public class player extends Sprite{
         if (key == KeyEvent.VK_P) 		scaleAcc = -0.01f;
         //shooting
         if (key == KeyEvent.VK_SPACE) {
-        	gun.angle = getAngle();
-        	gun.shoot(this, this);
-        	gun.bullets.add(new Integer(0));
+        	gun.shoot(getAngle());
         }
         
     }

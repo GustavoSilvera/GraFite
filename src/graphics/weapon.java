@@ -22,7 +22,8 @@ public class weapon {
 		killCount = 0;
 		isFiring = false;
 	}
-	public void shoot(Sprite gunner, Sprite target) {
+	public void shoot(double getAngle) {
+		angle = getAngle;
 		isFiring = true;
 		ammo--;
 		bullets.add(new Integer(0));

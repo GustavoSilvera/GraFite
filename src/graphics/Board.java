@@ -32,6 +32,7 @@ public class Board extends JPanel implements ActionListener {
     public Board() {
     	addKeyListener(new TAdapter());
     	addMouseMotionListener(new MAdapter());
+    	addMouseListener(new MButtonAdapter());
     	screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setFocusable(true);
         setBackground(Color.black);
@@ -132,5 +133,11 @@ public class Board extends JPanel implements ActionListener {
         public void mouseMoved(MouseEvent e) {
         	Freddy.mouseMove(e);
         }
+    }
+    private class MButtonAdapter extends MouseAdapter {
+    	@Override
+        public void mousePressed(MouseEvent e) {
+    		Freddy.gun.shoot(Freddy.getAngle());        
+    	}
     }
 }
