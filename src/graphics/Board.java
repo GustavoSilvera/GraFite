@@ -26,6 +26,8 @@ public class Board extends JPanel implements ActionListener {
     private Timer timer;
     private player Freddy;
     ArrayList<enemy> enemies = new ArrayList<enemy>();
+    ArrayList<drop> healthDrops = new ArrayList<drop>();
+    ArrayList<drop> ammoDrops = new ArrayList<drop>();
     public Dimension screenSize;
     private final int msDELAY = 10;
     private final int NUM_INIT_ENEMIES = 5;
@@ -58,6 +60,22 @@ public class Board extends JPanel implements ActionListener {
             g2d.drawImage(enemies.get(i).getImage(), enemies.get(i).getX(), (int)enemies.get(i).getY(), (int)(enemies.get(i).getScale() * enemies.get(i).getWidth()), (int)(enemies.get(i).getScale() * enemies.get(i).getHeight()), this);
             g2d.rotate(-(enemies.get(i).getAngle()), enemies.get(i).getXcntr(), enemies.get(i).getYcntr());
         }
+        for(int i = 0; i < healthDrops.size(); i++) {
+            g2d.drawImage(healthDrops.get(i).getImg(), 
+            		(int)healthDrops.get(i).getPos().getX(),
+            		(int)healthDrops.get(i).getPos().getY(), 
+            		(int)(healthDrops.get(i).getValue() * healthDrops.get(i).getSize()), 
+            		(int)(healthDrops.get(i).getValue() * healthDrops.get(i).getSize()), 
+            		this);
+        }
+        for(int i = 0; i < ammoDrops.size(); i++) {
+            g2d.drawImage(ammoDrops.get(i).getImg(), 
+            		(int)ammoDrops.get(i).getPos().getX(),
+            		(int)ammoDrops.get(i).getPos().getY(), 
+            		(int)(ammoDrops.get(i).getValue() * ammoDrops.get(i).getSize()), 
+            		(int)(ammoDrops.get(i).getValue() * ammoDrops.get(i).getSize()), 
+            		this);
+        }
         g2d.setColor(new Color(255, 0, 0));
         g2d.setStroke(new BasicStroke(10f));//thicc line 
         for(int i = 0; i < Freddy.gun.bullets.size(); i++) {
@@ -80,6 +98,7 @@ public class Board extends JPanel implements ActionListener {
         g2d.drawString("Enemies Killed: " + Freddy.getKills(), 50, 50);
         g2d.drawString("Enemies Remaining: " + enemies.size(), 50, 150);
         g2d.drawString("Current Health: " + Freddy.getHealth(), 50, 250);
+        g2d.drawString("Current Ammo: " + Freddy.gun.getAmmo(), 50, 350);
         g2d.dispose();
         
     }
@@ -108,14 +127,35 @@ public class Board extends JPanel implements ActionListener {
         			enemies.add(enemy.randomStart(getWidth(), getHeight()));
         		}
         		if(Freddy.getKills() % 20 == 0) {
-            		for(int j = 0; j < 5; j++) {
+            		for(int j = 0; j < 3; j++) {
             			enemies.add(enemy.randomStart(getWidth(), getHeight()));
             		}
+            	}
+        		int randomMod = ThreadLocalRandom.current().nextInt(10, 30);
+        		if(Freddy.getKills() % randomMod == 0) {
+            		healthDrops.add(drop.randomStart(getWidth(), getHeight(), true));
+            	}
+        		int randomMod2 = ThreadLocalRandom.current().nextInt(10, 20);
+        		if(Freddy.getKills() % randomMod2 == 0) {
+            		ammoDrops.add(drop.randomStart(getWidth(), getHeight(), false));
             	}
         	}
         }
     	if(Freddy.getScale() < 0.01) timer.stop(); 
-    	//repaint((int)Freddy.getX()-1, (int)Freddy.getY()-1, Freddy.getWidth()+2, Freddy.getHeight()+2);     
+    	for(int i = 0; i < healthDrops.size(); i++) {
+            double dist = healthDrops.get(i).getSize()/2*healthDrops.get(i).getValue() + Freddy.getWidth()*Freddy.getScale()/2;
+            if(Freddy.getCenterPos().distanceSqr(healthDrops.get(i).getCenterPos()) < Math.pow(dist, 2)) {
+        		Freddy.getHeal(healthDrops.get(i).getValue());
+        		healthDrops.remove(i);
+        	}
+    	}
+    	for(int i = 0; i < ammoDrops.size(); i++) {
+            double dist = ammoDrops.get(i).getSize()/2*ammoDrops.get(i).getValue() + Freddy.getWidth()*Freddy.getScale()/2;
+            if(Freddy.getCenterPos().distanceSqr(ammoDrops.get(i).getCenterPos()) < Math.pow(dist, 2)) {
+        		Freddy.getAmmo(ammoDrops.get(i).getValue());
+        		ammoDrops.remove(i);
+        	}
+    	}
     	repaint(0, 0, getWidth(), getHeight());     
     }
     private class TAdapter extends KeyAdapter {

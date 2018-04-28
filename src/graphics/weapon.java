@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 
 public class weapon {
-	private int ammo;
+	public int ammunition;
 	public double angle;
 	private int killCount;
 	public boolean isFiring;
@@ -18,15 +18,17 @@ public class weapon {
 	public weapon() {
 		ImageIcon asset = new ImageIcon(getClass().getClassLoader().getResource( "img/pow.png" ));
 		image = asset.getImage(); 
-		ammo = 100;
+		ammunition = 100;
 		killCount = 0;
 		isFiring = false;
 	}
 	public void shoot(double getAngle) {
-		angle = getAngle;
-		isFiring = true;
-		ammo--;
-		bullets.add(new Integer(0));
+		if(ammunition > 0) {//has to have SOMETHING
+			angle = getAngle;
+			isFiring = true;
+			ammunition--;
+			bullets.add(new Integer(0));
+		}
 	}
 	public void ceaseFire() {
 		isFiring = false;
@@ -34,4 +36,5 @@ public class weapon {
 
 	public Image getImage() {return image;	}
 	public double getAngle() {return angle;}
+	public int getAmmo() {return ammunition;}
 }

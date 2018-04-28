@@ -24,6 +24,12 @@ public class player extends Sprite{
 	public void getHurt() {
 		if(health > 0) health--;
 	}
+	public void getHeal(int value) {
+		health+=value;
+	}
+	public void getAmmo(int value) {
+		gun.ammunition+=value;
+	}
 	public void update(int winX, int winY) {
 		super.update(winX,  winY);
 		if(health < 1) {
@@ -51,9 +57,8 @@ public class player extends Sprite{
         if (key == KeyEvent.VK_P) 		scaleAcc = -0.01f;
         //shooting
         if (key == KeyEvent.VK_SPACE) {
-        	gun.shoot(getAngle());
+        	if(!gun.isFiring) gun.shoot(getAngle());
         }
-        
     }
     public void keyReleased(KeyEvent e) {
     	int key = e.getKeyCode();
