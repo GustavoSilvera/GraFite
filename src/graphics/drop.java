@@ -9,6 +9,7 @@ public class drop{
 	private vec3 pos;
 	private int value;
 	private Image img;
+	private double angle = 0;
 	private double size;
 	public drop(int x, int y, int v, boolean isHealth) {
 		setPos(new vec3(x, y));
@@ -20,6 +21,9 @@ public class drop{
 		value = v;
 		if (Math.pow(value/2, 2) < 2) setSize(2);
 		else setSize(Math.pow(value/2, 2));
+	}
+	public void update() {
+		angle += 0.02;
 	}
 	public vec3 getPos() {
 		return pos;
@@ -33,6 +37,7 @@ public class drop{
 	public int getValue() {
 		return value;
 	}
+	public double getAngle() {return angle;}
     public vec3 getCenterPos() { 
     	return new vec3(
     			pos.getX() + value * size / 2.0, 

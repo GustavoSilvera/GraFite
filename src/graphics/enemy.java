@@ -10,10 +10,10 @@ public class enemy extends Sprite{
 	public enemy(int x, int y, double scalar, double s) {
 		int randomImage = ThreadLocalRandom.current().nextInt(0, 4);
 		String randomString = null;
-		if(randomImage == 0) randomString = "img/mask.png";//"C:/Users/grs53/eclipse-workspace/graphics/src/graphics/freddy.png");
-		else if(randomImage == 1) randomString = "img/harsh.png";//"C:/Users/grs53/eclipse-workspace/graphics/src/graphics/freddy.png");
-		else if(randomImage == 2) randomString = "img/glasses.png";//"C:/Users/grs53/eclipse-workspace/graphics/src/graphics/freddy.png");
-		else if(randomImage == 3) randomString = "img/classic.png";//"C:/Users/grs53/eclipse-workspace/graphics/src/graphics/freddy.png");
+		if(randomImage == 0) randomString = "img/mask.png";
+		else if(randomImage == 1) randomString = "img/harsh.png";
+		else if(randomImage == 2) randomString = "img/glasses.png";
+		else if(randomImage == 3) randomString = "img/classic.png";
 		ImageIcon asset = new ImageIcon(getClass().getClassLoader().getResource( randomString ));
         image = asset.getImage(); 
         width = image.getWidth(null);
@@ -34,7 +34,7 @@ public class enemy extends Sprite{
     	else if(randStartingWall == 1) randomX = winX;
     	else if(randStartingWall == 2) randomY = 0;
     	else randomY = winY;
-    	enemy rando = new enemy(randomX, randomY, 1.0, random/100.0);
+    	enemy rando = new enemy(randomX, randomY, random/20.0, random/100.0);
     	return rando;
     }
 	public void target(Sprite goal) {//moves towards goal

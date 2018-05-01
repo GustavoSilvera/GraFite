@@ -33,10 +33,10 @@ public abstract class Sprite {
     public void update(int winX, int winY) {
     	final double eff = 0.95;//efficiency loss of speed
     	vel = (vel.times(eff)).plus(acc);//increases velocity by speed (with efficiency loss)
-    	if(pos.getX() >= winX - width*scale ) 					vel.setX(-Math.abs(vel.getX()));	
-    	else if (pos.getX() <= 0) 									vel.setX(Math.abs(vel.getX()));										
-    	if(pos.getY() >= winY - height*scale ) 					vel.setY(-Math.abs(vel.getY()));	
-    	else if (pos.getY() <= 0) 									vel.setY(Math.abs(vel.getY()));	
+    	if(pos.getX() >= winX - width*scale ) 					vel.setX(-eff*Math.abs(vel.getX()));	
+    	else if (pos.getX() <= 0) 								vel.setX(eff*Math.abs(vel.getX()));										
+    	if(pos.getY() >= winY - height*scale ) 					vel.setY(-eff*Math.abs(vel.getY()));	
+    	else if (pos.getY() <= 0) 								vel.setY(eff*Math.abs(vel.getY()));	
     	pos = pos.plus(vel);
     	angVel = angVel*eff*0.9 + angAcc;//updates velocity
     	angle += angVel;//updates angle
